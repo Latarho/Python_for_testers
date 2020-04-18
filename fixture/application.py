@@ -1,25 +1,16 @@
 from selenium import webdriver
+from fixture.session import SessionHelper
 
 class Application:
 
     def __init__(self):
         self.driver = webdriver.Chrome(executable_path="C:/Users/latar/chromedriver/chromedriver.exe")
         self.driver.implicitly_wait(30)
+        self.session = SessionHelper(self)
 
     def open_home_page(self):
         driver = self.driver
         driver.get("http://localhost/addressbook/group.php")
-
-    def login(self, username, password):
-        driver = self.driver
-        self.open_home_page()
-        driver.find_element_by_name("user").clear()
-        driver.find_element_by_name("user").clear()
-        driver.find_element_by_name("user").send_keys(username)
-        driver.find_element_by_name("pass").clear()
-        driver.find_element_by_name("pass").clear()
-        driver.find_element_by_name("pass").send_keys(password)
-        driver.find_element_by_xpath("//input[@value='Login']").click()
 
     def open_groups_page(self):
         driver = self.driver
@@ -47,10 +38,6 @@ class Application:
     def return_to_groups_page(self):
         driver = self.driver
         driver.find_element_by_link_text("group page").click()
-
-    def logout(self):
-        driver = self.driver
-        driver.find_element_by_link_text("Logout").click()
 
     def create_contact(self, contact):
         driver = self.driver
