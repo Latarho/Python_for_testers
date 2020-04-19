@@ -7,80 +7,48 @@ class ContactHelper:
         driver = self.app.driver
         # init contact creators
         driver.find_element_by_xpath("//*[@id='nav']/ul/li[2]/a").click()
-        # fill contact form
-        driver.find_element_by_name("firstname").click()
-        driver.find_element_by_name("firstname").clear()
-        driver.find_element_by_name("firstname").send_keys(contact.first_name)
-        driver.find_element_by_name("middlename").click()
-        driver.find_element_by_name("middlename").clear()
-        driver.find_element_by_name("middlename").send_keys(contact.middle_name)
-        driver.find_element_by_name("lastname").click()
-        driver.find_element_by_name("lastname").clear()
-        driver.find_element_by_name("lastname").send_keys(contact.last_name)
-        driver.find_element_by_name("title").click()
-        driver.find_element_by_name("title").clear()
-        driver.find_element_by_name("title").send_keys(contact.title)
-        driver.find_element_by_name("company").click()
-        driver.find_element_by_name("company").clear()
-        driver.find_element_by_name("company").send_keys(contact.company)
-        driver.find_element_by_name("address").click()
-        driver.find_element_by_name("address").clear()
-        driver.find_element_by_name("address").send_keys(contact.address)
-        driver.find_element_by_name("mobile").click()
-        driver.find_element_by_name("mobile").clear()
-        driver.find_element_by_name("mobile").send_keys(contact.mobile)
-        driver.find_element_by_name("email").click()
-        driver.find_element_by_name("email").clear()
-        driver.find_element_by_name("email").send_keys(contact.email)
-        driver.find_element_by_name("notes").click()
-        driver.find_element_by_name("notes").clear()
-        driver.find_element_by_name("notes").send_keys(contact.notes)
+        self.fill_contact_form(contact)
         # submit contact creation
         driver.find_element_by_name("submit").click()
         self.return_to_contact_page()
 
+    def fill_contact_form(self, contact):
+        driver = self.app.driver
+        self.change_filed_contact("firstname", contact.first_name)
+        self.change_filed_contact("middlename", contact.middle_name)
+        self.change_filed_contact("lastname", contact.last_name)
+        self.change_filed_contact("title", contact.title)
+        self.change_filed_contact("company", contact.company)
+        self.change_filed_contact("address", contact.address)
+        self.change_filed_contact("mobile", contact.mobile)
+        self.change_filed_contact("email", contact.email)
+        self.change_filed_contact("notes", contact.notes)
+
+    def change_filed_contact(self, field_name, text):
+        driver = self.app.driver
+        if text is not None:
+            driver.find_element_by_name(field_name).click()
+            driver.find_element_by_name(field_name).clear()
+            driver.find_element_by_name(field_name).send_keys(text)
+
     def delete_first_contact(self):
         driver = self.app.driver
-        # select first contact
-        driver.find_element_by_name("selected[]").click()
+        self.select_first_contact()
         # submit deletion
         driver.find_element_by_xpath("//*[@id='content']/form[2]/div[2]/input").click()
         driver.switch_to_alert().accept()
 
-    def modify_first_contact(self, contact):
+    def select_first_contact(self):
         driver = self.app.driver
-        # select first contact
         driver.find_element_by_name("selected[]").click()
+
+    def modify_first_contact(self, new_contact_data):
+        driver = self.app.driver
+        self.select_first_contact()
         # init contact modify
         driver.find_element_by_xpath("//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
         # fill contact form
-        driver.find_element_by_name("firstname").click()
-        driver.find_element_by_name("firstname").clear()
-        driver.find_element_by_name("firstname").send_keys(contact.first_name)
-        driver.find_element_by_name("middlename").click()
-        driver.find_element_by_name("middlename").clear()
-        driver.find_element_by_name("middlename").send_keys(contact.middle_name)
-        driver.find_element_by_name("lastname").click()
-        driver.find_element_by_name("lastname").clear()
-        driver.find_element_by_name("lastname").send_keys(contact.last_name)
-        driver.find_element_by_name("title").click()
-        driver.find_element_by_name("title").clear()
-        driver.find_element_by_name("title").send_keys(contact.title)
-        driver.find_element_by_name("company").click()
-        driver.find_element_by_name("company").clear()
-        driver.find_element_by_name("company").send_keys(contact.company)
-        driver.find_element_by_name("address").click()
-        driver.find_element_by_name("address").clear()
-        driver.find_element_by_name("address").send_keys(contact.address)
-        driver.find_element_by_name("mobile").click()
-        driver.find_element_by_name("mobile").clear()
-        driver.find_element_by_name("mobile").send_keys(contact.mobile)
-        driver.find_element_by_name("email").click()
-        driver.find_element_by_name("email").clear()
-        driver.find_element_by_name("email").send_keys(contact.email)
-        driver.find_element_by_name("notes").click()
-        driver.find_element_by_name("notes").clear()
-        driver.find_element_by_name("notes").send_keys(contact.notes)
+        self.fill_contact_form(new_contact_data)
         # submit modify
         driver.find_element_by_xpath("//*[@id='content']/form[1]/input[22]").click()
         # return to contact page from update
