@@ -39,6 +39,14 @@ class ContactHelper:
         driver.find_element_by_name("submit").click()
         self.return_to_contact_page()
 
+    def delete_first_contact(self):
+        driver = self.app.driver
+        # select first contact
+        driver.find_element_by_name("selected[]").click()
+        # submit deletion
+        driver.find_element_by_xpath("//*[@id='content']/form[2]/div[2]/input").click()
+        driver.switch_to_alert().accept()
+
     def return_to_contact_page(self):
         driver = self.app.driver
         driver.find_element_by_xpath("//*[@id='content']/div/i/a[2]").click()

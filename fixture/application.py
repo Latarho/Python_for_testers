@@ -14,7 +14,7 @@ class Application:
 
     def open_home_page(self):
         driver = self.driver
-        driver.get("http://localhost/addressbook/group.php")
+        driver.get("http://localhost/addressbook/")
 
     def destroy(self):
         self.driver.quit()
