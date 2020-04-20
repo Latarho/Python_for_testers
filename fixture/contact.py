@@ -1,3 +1,5 @@
+from model.contact import Contact
+
 class ContactHelper:
 
     def __init__(self, app):
@@ -35,7 +37,8 @@ class ContactHelper:
         driver = self.app.driver
         self.select_first_contact()
         # submit deletion
-        driver.find_element_by_xpath("//*[@id='content']/form[2]/div[2]/input").click()
+        driver.find_element_by_css_selector("input[value='Delete']").click()
+        #driver.find_element_by_xpath("//*[@id='content']/form[2]/div[2]/input").click()
         driver.switch_to_alert().accept()
 
     def select_first_contact(self):
@@ -61,3 +64,12 @@ class ContactHelper:
     def count(self):
         driver = self.app.driver
         return len(driver.find_elements_by_name("selected[]"))
+
+    def get_contact_list(self):
+        driver = self.app.driver
+        contacts = []
+        for element in driver.find_elements_by_css_selector("tr.odd"):
+            text = element.text
+            id = element.find_element_by_name("selected[]").get_attribute("value")
+            contacts.append(Contact(first_name=text, id=id))
+        return contacts
