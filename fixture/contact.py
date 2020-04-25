@@ -24,6 +24,7 @@ class ContactHelper:
         self.change_filed_contact("company", contact.company)
         self.change_filed_contact("address", contact.address)
         self.change_filed_contact("mobile", contact.mobile)
+        self.change_filed_contact("work", contact.work)
         self.change_filed_contact("email", contact.email)
         self.change_filed_contact("notes", contact.notes)
 
@@ -44,9 +45,12 @@ class ContactHelper:
         self.contact_cache = None
 
     def select_first_contact(self):
+        self.select_contact_by_index(0)
+
+    def select_contact_by_index(self, index):
         driver = self.app.driver
-        driver.find_element_by_name("selected[]").click()
-        self.contact_cache = None
+        # Среди всех элементов (контактов) выбираем по индексу нужный и клик
+        driver.find_elements_by_name("selected[]")[index].click()
 
     def modify_first_contact(self, new_contact_data):
         driver = self.app.driver
@@ -77,9 +81,35 @@ class ContactHelper:
             driver = self.app.driver
             self.app.open_home_page()
             self.contact_cache = []
-            for element in driver.find_elements_by_css_selector("[name=entry]"):
-                id = element.find_element_by_name("selected[]").get_attribute("value")
-                text1 = element.find_element_by_xpath("./td[3]").text
-                text2 = element.find_element_by_xpath("./td[2]").text
-                self.contact_cache.append(Contact(first_name=text1, last_name=text2, id=id))
+            for row in driver.find_elements_by_name("entry"):
+                cells = row.find_elements_by_tag_name("td")
+                id = cells[0].find_element_by_tag_name("input").get_attribute("value")
+                first_name = cells[1].text
+                last_name = cells[2].text
+                all_phones = cells[5].text.splitlines()
+                self.contact_cache.append(Contact(first_name=first_name, last_name=last_name, id=id, mobile=all_phones[0], work=all_phones[1]))
         return list(self.contact_cache)
+
+    def open_contact_to_edit_by_index(self, index):
+        driver = self.app.driver
+        self.app.open_home_page()
+        row = driver.find_elements_by_name("entry")[index]
+        cell = row.find_elements_by_tag_name("td")[7]
+        cell.find_element_by_tag_name("a").click()
+
+    def open_contact_view_by_index(self, index):
+        driver = self.app.driver
+        self.app.open_home_page()
+        row = driver.find_elements_by_name("entry")[index]
+        cell = row.find_elements_by_tag_name("td")[6]
+        cell.find_element_by_tag_name("a").click()
+
+    def get_contact_info_from_edit_page(self, index):
+        driver = self.app.driver
+        self.open_contact_to_edit_by_index(index)
+        first_name = driver.find_element_by_name("firstname").get_attribute("value")
+        last_name = driver.find_element_by_name("lastname").get_attribute("value")
+        id = driver.find_element_by_name("id").get_attribute("value")
+        mobile = driver.find_element_by_name("mobile").get_attribute("value")
+        work = driver.find_element_by_name("work").get_attribute("value")
+        return Contact(first_name = first_name, last_name = last_name, id = id, mobile = mobile, work=work)

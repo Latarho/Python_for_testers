@@ -21,7 +21,7 @@ class Application:
 
     def open_home_page(self):
         driver = self.driver
-        driver.get("http://localhost/addressbook/")
+        driver.get("http://localhost:8888/addressbook/")
 
     def destroy(self):
         self.driver.quit()
