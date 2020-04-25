@@ -36,11 +36,12 @@ class ContactHelper:
             driver.find_element_by_name(field_name).send_keys(text)
 
     def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
         driver = self.app.driver
-        self.select_first_contact()
-        # submit deletion
+        self.select_contact_by_index(index)
         driver.find_element_by_css_selector("input[value='Delete']").click()
-        #driver.find_element_by_xpath("//*[@id='content']/form[2]/div[2]/input").click()
         driver.switch_to_alert().accept()
         self.contact_cache = None
 
@@ -52,16 +53,15 @@ class ContactHelper:
         # Среди всех элементов (контактов) выбираем по индексу нужный и клик
         driver.find_elements_by_name("selected[]")[index].click()
 
-    def modify_first_contact(self, new_contact_data):
+    def modify_first_contact(self):
+        self.modify_contact_by_index(0)
+
+    def modify_contact_by_index(self, index, new_contact_data):
         driver = self.app.driver
         self.select_first_contact()
-        # init contact modify
-        driver.find_element_by_xpath("//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
-        # fill contact form
+        driver.find_element_by_xpath("//*[@id='maintable']/tbody/tr[2]/td[8]/a/img".format(index)).click()
         self.fill_contact_form(new_contact_data)
-        # submit modify
         driver.find_element_by_xpath("//*[@id='content']/form[1]/input[22]").click()
-        # return to contact page from update
         driver.find_element_by_xpath("//*[@id='content']/div/i/a").click()
         self.contact_cache = None
 

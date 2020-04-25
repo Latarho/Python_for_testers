@@ -11,7 +11,9 @@ def test_modify_some_group_name(app):
     group = Group(name="Modify_group_1")
     group.id = old_groups[index].id
     app.group.modify_group_by_index(index, group)
+
     new_groups = app.group.get_group_list()
     assert len(old_groups) == app.group.count()
+
     old_groups[index] = group
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
