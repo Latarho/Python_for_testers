@@ -1,4 +1,5 @@
 from model.contact import Contact
+import re
 
 class ContactHelper:
 
@@ -110,6 +111,14 @@ class ContactHelper:
         first_name = driver.find_element_by_name("firstname").get_attribute("value")
         last_name = driver.find_element_by_name("lastname").get_attribute("value")
         id = driver.find_element_by_name("id").get_attribute("value")
-        mobile = driver.find_element_by_name("mobile").get_attribute("value")
-        work = driver.find_element_by_name("work").get_attribute("value")
-        return Contact(first_name = first_name, last_name = last_name, id = id, mobile = mobile, work=work)
+        mobilephone = driver.find_element_by_name("mobile").get_attribute("value")
+        workphone = driver.find_element_by_name("work").get_attribute("value")
+        return Contact(first_name = first_name, last_name = last_name, id = id, mobile = mobilephone, work=workphone)
+
+    def get_contact_from_view_page(self, index):
+        driver = self.app.driver
+        self.open_contact_view_by_index(index)
+        text = driver.find_element_by_id("content").text
+        mobilephone = re.search("M: (.*)", text).group(1)
+        workphone = re.search("M: (.*)", text).group(1)
+        return Contact(mobile=mobilephone, work=workphone)
