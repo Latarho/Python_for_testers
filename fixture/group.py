@@ -43,6 +43,15 @@ class GroupHelper:
         self.return_to_groups_page()
         self.group_cache = None
 
+    def delete_group_by_id(self, id):
+        driver = self.app.driver
+        self.open_groups_page()
+        self.select_group_by_id(id)
+        # submit deletion
+        driver.find_element_by_name("delete").click()
+        self.return_to_groups_page()
+        self.group_cache = None
+
     def delete_first_group(self):
         # Используем метод делит груп бай индекс с параметром 0, чтобы удалить первую группу
         self.delete_group_by_index(0)
@@ -71,6 +80,11 @@ class GroupHelper:
         driver = self.app.driver
         # Среди всех элементов (групп) выбираем по индексу нужный и клик
         driver.find_elements_by_name("selected[]")[index].click()
+
+    def select_group_by_id(self, id):
+        driver = self.app.driver
+        # Среди всех элементов (групп) выбираем по индексу нужный и клик
+        driver.find_element_by_css_selector("input[value = '%s']" % id).click()
 
     def return_to_groups_page(self):
         driver = self.app.driver
